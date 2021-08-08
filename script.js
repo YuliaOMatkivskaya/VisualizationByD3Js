@@ -130,6 +130,8 @@ let heightOfLegend = 45;
 let markerWidth = 20;
 let startDiagramX = 85;
 let widthCell = 77;
+let posLineDoingY = 200;
+let posLinePlaingY = 90;
 
 //пояснение к маркерам
 let svg1 = d3.select("#conteiner").append("svg");
@@ -209,17 +211,17 @@ for (let obj of baseOfData) {
             .style("stroke-width", "2")
             //.style("stroke-dasharray", "4 2") //прерывистая линия
             .attr("x1", startDiagramX)
-            .attr("y1", 90)
+            .attr("y1", posLinePlaingY)
             .attr("x2", width)
-            .attr("y2", 90);
+            .attr("y2", posLinePlaingY);
 
         svg.append("line")
             .style("stroke", "gray")
             .style("stroke-width", "2")
             .attr("x1", startDiagramX)
-            .attr("y1", 200)
+            .attr("y1", posLineDoingY)
             .attr("x2", width)
-            .attr("y2", 200);
+            .attr("y2", posLineDoingY);
 
         /*let g = svg.append("g");
         // добавляем путь
@@ -280,7 +282,7 @@ for (let obj of baseOfData) {
                     .style("stroke", "steelblue")
                     .style("stroke-width", "2")
                     .attr("x", posMarkerXDoing-markerWidth/2)
-                    .attr("y", 200-markerWidth/2)
+                    .attr("y", posLineDoingY-markerWidth/2)
                     .attr("width", markerWidth)
                     .attr("height", markerWidth)
                     //.attr("transform", "rotate(45,100,100)")
@@ -302,12 +304,12 @@ for (let obj of baseOfData) {
                 .style("stroke", "steelblue")
                 .style("stroke-width", "2")
                 .attr("x", posMarkerXPlaning-markerWidth/2)
-                .attr("y", 90-markerWidth/2)
+                .attr("y", posLinePlaingY-markerWidth/2)
                 //.attr("transform", "rotate(45,75,75)")
                 .attr("width", markerWidth)
                 .attr("height", markerWidth)
                 .attr("rx", 5);
-                
+
                 console.log(obj["title"]);
                 console.log("точка из запланированных");
             }
