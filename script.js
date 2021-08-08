@@ -34,8 +34,6 @@ let itemYearStart = document.querySelector("#itemYearStart");
 let itemYearFinish = document.querySelector("#itemYearFinish");
 let sendYear = document.querySelector("#sendYear");
 let removeYear = document.querySelector("#removeYear");
-
-
 function YearsAreCorrect() {
     if (localStorage.getItem("yearStart") == null || localStorage.getItem("yearFinish") < localStorage.getItem("yearStart") || localStorage.getItem("yearStart") < 2016) {
         itemYearStart.value = 2016;
