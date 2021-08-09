@@ -125,6 +125,7 @@ buttonPDF.addEventListener("click", generatePDF);
 let width = 780;
 let height = 250;
 let heightOfLegend = 45;
+let posLineLegendY=20;
 let markerWidth = 20;
 let startDiagramX = 85;
 let widthCell = 77;
@@ -140,13 +141,25 @@ svg1.attr("height", heightOfLegend)
     .style("margin-right", "5px")
     .style("margin-top", "5px");
 
-svg1.append("text")
-    .attr("x", 300)
-    .attr("y", 30)
-    .attr("text-anchor", "middle")
-    .style("font-size", "22px")
-    .text("Описание маркеров");
+let arrMark =[{color:"green", text: "-Пройденные вехи в срок"},{color:"red", text: "-Срыв"},{color:"blue", text: "-Даты, согласно контрактного графика"},{color:"gray", text: "-Прогноз"}];
+for(let i=0; i<arrMark.length;i++) {
 
+svg1.append("text")
+    .attr("x", `${40+i*230}`)
+    .attr("y", posLineLegendY+5)
+    .style("font-size", "9px")
+    .style("font-weight", 700)
+    .text(arrMark[i].text);
+    
+svg1.append("polygon")
+    .style("fill", arrMark[i].color)
+    .style("stroke", "steelblue")
+    .style("stroke-width", "2")
+    .attr("points", `${20+i*230} ${posLineLegendY-markerWidth/2}, 
+    ${(20+i*230)+markerWidth/2} ${posLineLegendY},
+    ${20+i*230} ${posLineLegendY+markerWidth/2}, 
+    ${(20+i*230)-markerWidth/2} ${posLineLegendY}`);
+}
 //вывод данных
 
 
@@ -192,15 +205,15 @@ for (let obj of baseOfData) {
                 .attr("x", startDiagramX + i * widthCell)
                 .attr("y", 0)
                 .attr("width", widthCell)
-                .attr("height", 40);
+                .attr("height", 30);
             //годы на блоках
             let dateInBlock = 2016 + i;
 
             svg.append("text")
                 .attr("x", startDiagramX +widthCell/2 + i * widthCell)
-                .attr("y", 25)
+                .attr("y", 20)
                 .attr("text-anchor", "middle")
-                .style("font-size", "16px")
+                .style("font-size", "14px")
                 .style("fill", "gray")
                 .text(dateInBlock);
         }
@@ -221,37 +234,24 @@ for (let obj of baseOfData) {
             .attr("x2", width)
             .attr("y2", posLineDoingY);
 
-        /*let g = svg.append("g");
-        // добавляем путь
-        g.append("circle")
-            .style("fill", "none")
-            .style("stroke", "steelblue")
-            .style("stroke-width", "2") 
-            .attr("cx", 100)
-            .attr("cy", 100)
-            .attr("r", 50);
-            
-        g.append("rect")
-            .style("fill", "none")
-            .style("stroke", "steelblue")
-            .style("stroke-width", "2")
-            .attr("x", 30)
-            .attr("y", 20)
-            .attr("width", 100) 
-            .attr("height", 100)
-            .attr("rx", 5);
-
-    */
-
         //отрисовывание точек с фильтрацией по годам
         for (let j = 0; j < obj["doing"].length; j++) {
 
             let dateOfDoing = obj["doing"][j]["date"];
+            let nameDoing = obj["doing"][j]["name"];
             let partOfYearDoing = (30 * dateOfDoing.getMonth() + dateOfDoing.getDate()) / 365; //прошедшая доля текущего года для точки из выполнения
             let dateOfPlaning = obj["planing"][j]["date"];
             let NowDate = new Date();
             let posMarkerXDoing = (startDiagramX + (dateOfDoing.getFullYear() - 2016 + partOfYearDoing) * widthCell);
-
+            let posMarkerYDoing = 200;
+            //вывод даты у маркера
+            let textMarkersDate;
+            /*function addZero(n){
+                return (parseInt(n, 10) < 10 ? '0' : '') + n;
+            }
+            */
+            //textMarkersDate = `${dateOfDoing.getDate()}` +`.`+`${dateOfDoing.getMonth()}`+`.`+`${dateOfDoing.getFullYear()}`;
+            //console.log(textMarkersDate);
 
             if (dateOfDoing.getFullYear() >= yearStart && dateOfDoing.getFullYear() <= yearFinish) {
                 //рисуем точку
@@ -259,32 +259,47 @@ for (let obj of baseOfData) {
                 console.log("точка из выполненных");
                 let color;
 
-                function AddColorMarker(color) {
+                function ParametersOfMarkers(color) {
                     //условия окрашивания маркера
                     if (dateOfDoing <= dateOfPlaning && !(NowDate <= dateOfPlaning)) {
                         // в срок - маркер зеленый
                         alert("маркер зеленый");
-                        return color = "green";
+                        color = "green";
                     } else if (dateOfDoing > dateOfPlaning || NowDate > dateOfPlaning) {
                         // срыв - маркер красный
                         alert("маркер красный");
-                        return color = "red";
+                        color = "red";
                     } else if (NowDate <= dateOfPlaning) {
                         // в работе - маркер серый
                         alert("маркер серый");
-                        return color = "gray";
+                        color = "gray";
                     }
+                    return color;
                 }
-                svg.append("rect")
-                    .style("fill", AddColorMarker(color))
-                    .style("stroke", "steelblue")
-                    .style("stroke-width", "2")
-                    .attr("x", posMarkerXDoing-markerWidth/2)
-                    .attr("y", posLineDoingY-markerWidth/2)
-                    .attr("width", markerWidth)
-                    .attr("height", markerWidth)
-                    //.attr("transform", "rotate(45,100,100)")
-                    .attr("rx", 5);
+                svg.append("polygon")
+                .style("fill", ParametersOfMarkers(color))
+                .style("stroke", "steelblue")
+                .style("stroke-width", "2")
+                .attr("points", `${posMarkerXDoing} ${posMarkerYDoing-markerWidth/2}, 
+                ${posMarkerXDoing+markerWidth/2} ${posMarkerYDoing},
+                ${posMarkerXDoing} ${posMarkerYDoing+markerWidth/2}, 
+                ${posMarkerXDoing-markerWidth/2} ${posMarkerYDoing}`);
+                
+                textMarkersDate = `${addZero(dateOfDoing.getDate())}`+`.`+`${addZero(dateOfDoing.getMonth()+1)}`+`.`+`${dateOfDoing.getFullYear()}`;
+                svg.append("text")
+                    .attr("x",posMarkerXDoing)
+                    .attr("y",230)
+                    .style("font-size", "8px")
+                    .style("fill", "black")
+                    .text(textMarkersDate);
+
+                svg.append("text")
+                    .attr("x",posMarkerXDoing)
+                    .attr("y",180)
+                    .style("font-size", "10px")
+                    .style("fill", "black")
+                    .style("font-weight", 700)
+                    .text(nameDoing);
 
 
             }
@@ -295,29 +310,47 @@ for (let obj of baseOfData) {
             let dateOfPlaning = obj["planing"][k]["date"];
             let partOfYearPlaning = (30 * dateOfPlaning.getMonth() + dateOfPlaning.getDate()) / 365; //прошедшая доля текущего года для точки из плана
             let posMarkerXPlaning = (startDiagramX + (dateOfPlaning.getFullYear() - 2016 + partOfYearPlaning) * widthCell);
+            let namePlaning = obj["planing"][k]["name"];
+            let posMarkerYPlaning =90;
             if (dateOfPlaning.getFullYear() >= yearStart && dateOfPlaning.getFullYear() <= yearFinish) {
                 //рисуем точку
-                svg.append("rect")
+                svg.append("polygon")
                 .style("fill", "blue")
                 .style("stroke", "steelblue")
                 .style("stroke-width", "2")
-                .attr("x", posMarkerXPlaning-markerWidth/2)
-                .attr("y", posLinePlaingY-markerWidth/2)
-                //.attr("transform", "rotate(45,75,75)")
-                .attr("width", markerWidth)
-                .attr("height", markerWidth)
-                .attr("rx", 5);
+                .attr("points", `${posMarkerXPlaning} ${posMarkerYPlaning-markerWidth/2}, 
+                ${posMarkerXPlaning+markerWidth/2} ${posMarkerYPlaning},
+                ${posMarkerXPlaning} ${posMarkerYPlaning+markerWidth/2}, 
+                ${posMarkerXPlaning-markerWidth/2} ${posMarkerYPlaning}`);
+    
 
                 console.log(obj["title"]);
                 console.log("точка из запланированных");
+
+                textMarkersDate = `${addZero(dateOfPlaning.getDate())}`+`.`+`${addZero(dateOfPlaning.getMonth()+1)}`+`.`+`${dateOfPlaning.getFullYear()}`;
+                svg.append("text")
+                    .attr("x",posMarkerXPlaning)
+                    .attr("y",120)
+                    .style("font-size", "8px")
+                    .style("fill", "black")
+                    .text(textMarkersDate);
+
+                svg.append("text")
+                    .attr("x",posMarkerXPlaning)
+                    .attr("y",70)
+                    .style("font-size", "10px")
+                    .style("fill", "black")
+                    .style("font-weight", 700)
+                    .text(namePlaning);
             }
         }
         //вывод названия объекта
         svg.append("text")
-            .attr("x", 10)
-            .attr("y", 55)
+            .attr("x", 5)
+            .attr("y", 50)
             .style("font-size", "16px")
             .style("fill", "black")
+            .style("font-weight", 700)
             .text(obj["title"]);
     }
     //фильтр по названию (ищет совпадения с введенным текстом)
@@ -335,4 +368,8 @@ for (let obj of baseOfData) {
         console.log('Совпадений нет');
     }
 
+}
+//вспомогательная функция,добавляем ноль в дате перед значением месяца и дня, если они меньше 10
+function addZero(n){
+    return (parseInt(n, 10) < 10 ? '0' : '') + n;
 }
