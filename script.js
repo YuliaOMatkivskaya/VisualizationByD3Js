@@ -14,7 +14,7 @@ let baseJson = `[{
         "title":"Трансформаторная будка",
         "planing":[
             {"name":"Монтаж0","date":"2017-11-13T12:00:00.000Z"},
-            {"name":"Монтаж1","date":"2021-10-10T12:00:00.000Z"}
+            {"name":"Монтаж1","date":"2022-01-10T12:00:00.000Z"}
             ],
             "doing":[
             {"name":"Монтаж0","date":"2017-12-05T12:00:00.000Z"},
@@ -129,8 +129,8 @@ let posLineLegendY=20;
 let markerWidth = 20;
 let startDiagramX = 85;
 let widthCell = 77;
-let posLineDoingY = 200;
-let posLinePlaingY = 90;
+let posMarkerYDoing = 200;
+let posMarkerYPlaning = 90;
 
 //пояснение к маркерам
 let svg1 = d3.select("#conteiner").append("svg");
@@ -141,7 +141,11 @@ svg1.attr("height", heightOfLegend)
     .style("margin-right", "5px")
     .style("margin-top", "5px");
 
-let arrMark =[{color:"green", text: "-Пройденные вехи в срок"},{color:"red", text: "-Срыв"},{color:"blue", text: "-Даты, согласно контрактного графика"},{color:"gray", text: "-Прогноз"}];
+let arrMark =[{color:"green", text: "- Пройденные вехи в срок"},
+{color:"red", text: "- Срыв"},
+{color:"blue", text: "- Даты, согласно контрактного графика"},
+{color:"gray", text: "- Прогноз"}];
+
 for(let i=0; i<arrMark.length;i++) {
 
 svg1.append("text")
@@ -220,22 +224,22 @@ for (let obj of baseOfData) {
         svg.append("line")
             .style("stroke", "gray")
             .style("stroke-width", "2")
-            //.style("stroke-dasharray", "4 2") //прерывистая линия
             .attr("x1", startDiagramX)
-            .attr("y1", posLinePlaingY)
+            .attr("y1", posMarkerYPlaning)
             .attr("x2", width)
-            .attr("y2", posLinePlaingY);
+            .attr("y2", posMarkerYPlaning);
 
         svg.append("line")
             .style("stroke", "gray")
             .style("stroke-width", "2")
             .attr("x1", startDiagramX)
-            .attr("y1", posLineDoingY)
+            .attr("y1", posMarkerYDoing)
             .attr("x2", width)
-            .attr("y2", posLineDoingY);
+            .attr("y2", posMarkerYDoing);
 
+        
         //отрисовывание точек с фильтрацией по годам
-        for (let j = 0; j < obj["doing"].length; j++) {
+        for (let j = 0; j < obj["planing"].length; j++) {
 
             let dateOfDoing = obj["doing"][j]["date"];
             let nameDoing = obj["doing"][j]["name"];
@@ -243,14 +247,26 @@ for (let obj of baseOfData) {
             let dateOfPlaning = obj["planing"][j]["date"];
             let NowDate = new Date();
             let posMarkerXDoing = (startDiagramX + (dateOfDoing.getFullYear() - 2016 + partOfYearDoing) * widthCell);
-            let posMarkerYDoing = 200;
-            //вывод даты у маркера
-            let textMarkersDate;
 
+            let partOfYearPlaning = (30 * dateOfPlaning.getMonth() + dateOfPlaning.getDate()) / 365; //прошедшая доля текущего года для точки из плана
+            let posMarkerXPlaning = (startDiagramX + (dateOfPlaning.getFullYear() - 2016 + partOfYearPlaning) * widthCell);
+            let namePlaning = obj["planing"][j]["name"];
+
+
+            //рисуем пунктирную линию, соединяющую маркеры
+            if(dateOfPlaning.getFullYear() >= yearStart && dateOfPlaning.getFullYear() <= yearFinish&&dateOfDoing.getFullYear() >= yearStart && dateOfDoing.getFullYear() <= yearFinish){
+            
+            svg.append("line")
+            .style("stroke", "gray")
+            .style("stroke-width", "2")
+            .style("stroke-dasharray", "4 2")//прерывистая линия
+            .attr("x1", posMarkerXPlaning)
+            .attr("y1", posMarkerYPlaning+markerWidth/2)
+            .attr("x2", posMarkerXDoing)
+            .attr("y2", posMarkerYDoing-markerWidth/2);
+            }
             if (dateOfDoing.getFullYear() >= yearStart && dateOfDoing.getFullYear() <= yearFinish) {
                 //рисуем точку
-                console.log(obj["title"]);
-                console.log("точка из выполненных");
                 let color;
 
                 function ParametersOfMarkers(color) {
@@ -297,17 +313,7 @@ for (let obj of baseOfData) {
 
 
             }
-        }
-
-        for (let k = 0; k < obj["planing"].length; k++) {
-
-            let dateOfPlaning = obj["planing"][k]["date"];
-            let partOfYearPlaning = (30 * dateOfPlaning.getMonth() + dateOfPlaning.getDate()) / 365; //прошедшая доля текущего года для точки из плана
-            let posMarkerXPlaning = (startDiagramX + (dateOfPlaning.getFullYear() - 2016 + partOfYearPlaning) * widthCell);
-            let namePlaning = obj["planing"][k]["name"];
-            let posMarkerYPlaning =90;
-            if (dateOfPlaning.getFullYear() >= yearStart && dateOfPlaning.getFullYear() <= yearFinish) {
-                //рисуем точку
+            if(dateOfPlaning.getFullYear() >= yearStart && dateOfPlaning.getFullYear() <= yearFinish){
                 svg.append("polygon")
                 .style("fill", "blue")
                 .style("stroke", "steelblue")
@@ -317,10 +323,8 @@ for (let obj of baseOfData) {
                 ${posMarkerXPlaning} ${posMarkerYPlaning+markerWidth/2}, 
                 ${posMarkerXPlaning-markerWidth/2} ${posMarkerYPlaning}`);
     
-
-                console.log(obj["title"]);
-                console.log("точка из запланированных");
-
+            //вывод даты у маркера
+            let textMarkersDate;
                 textMarkersDate = `${addZero(dateOfPlaning.getDate())}`+`.`+`${addZero(dateOfPlaning.getMonth()+1)}`+`.`+`${dateOfPlaning.getFullYear()}`;
                 svg.append("text")
                     .attr("x",posMarkerXPlaning)
