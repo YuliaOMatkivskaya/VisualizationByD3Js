@@ -246,12 +246,6 @@ for (let obj of baseOfData) {
             let posMarkerYDoing = 200;
             //вывод даты у маркера
             let textMarkersDate;
-            /*function addZero(n){
-                return (parseInt(n, 10) < 10 ? '0' : '') + n;
-            }
-            */
-            //textMarkersDate = `${dateOfDoing.getDate()}` +`.`+`${dateOfDoing.getMonth()}`+`.`+`${dateOfDoing.getFullYear()}`;
-            //console.log(textMarkersDate);
 
             if (dateOfDoing.getFullYear() >= yearStart && dateOfDoing.getFullYear() <= yearFinish) {
                 //рисуем точку
