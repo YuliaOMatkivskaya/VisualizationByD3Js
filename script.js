@@ -209,9 +209,9 @@ for (let obj of baseOfData) {
             .style("stroke-width", "1")
             .style("stroke-opacity", "0.4")
             .attr("x1", startDiagramX)
-            .attr("y1", 145)
+            .attr("y1", 140)
             .attr("x2", width)
-            .attr("y2", 145);
+            .attr("y2", 140);
 
         //промежуточные деления и блоки под годы
         for (let i = 0; i < 9; i++) {
@@ -243,7 +243,7 @@ for (let obj of baseOfData) {
                 .style("fill", "gray")
                 .text(dateInBlock);
         }
-        svg.append("line")
+        /*svg.append("line")
             .style("stroke", "gray")
             .style("stroke-width", "2")
             .attr("x1", startDiagramX)
@@ -258,7 +258,7 @@ for (let obj of baseOfData) {
             .attr("y1", posMarkerYDoing)
             .attr("x2", width)
             .attr("y2", posMarkerYDoing);
-
+        */
         
         //отрисовывание точек с фильтрацией по годам
         for (let j = 0; j < obj["planing"].length; j++) {
@@ -273,8 +273,38 @@ for (let obj of baseOfData) {
             let partOfYearPlaning = (30 * dateOfPlaning.getMonth() + dateOfPlaning.getDate()) / 365; //прошедшая доля текущего года для точки из плана
             let posMarkerXPlaning = (startDiagramX + (dateOfPlaning.getFullYear() - 2016 + partOfYearPlaning) * widthCell);
             let namePlaning = obj["planing"][j]["name"];
-
-
+            //линии плана и выполнения
+            if(j+1<obj["planing"].length){
+                let dateOfPlaningNext = obj["planing"][j+1]["date"];
+                let dateOfDoingNext = obj["doing"][j+1]["date"];
+    
+                let partOfYearDoingNext = (30 * dateOfDoingNext.getMonth() + dateOfDoingNext.getDate()) / 365; //прошедшая доля текущего года для точки из выполнения
+                let posMarkerXDoingNext = (startDiagramX + (dateOfDoingNext.getFullYear() - 2016 + partOfYearDoingNext) * widthCell);
+    
+                let partOfYearPlaningNext = (30 * dateOfPlaningNext.getMonth() + dateOfPlaningNext.getDate()) / 365; //прошедшая доля текущего года для точки из плана
+                let posMarkerXPlaningNext = (startDiagramX + (dateOfPlaningNext.getFullYear() - 2016 + partOfYearPlaningNext) * widthCell);
+                if(obj["planing"][j]["date"].getFullYear() >= yearStart && obj["planing"][j+1]["date"].getFullYear() <= yearFinish){
+                //линия по плану
+                svg.append("line")
+                .style("stroke", "gray")
+                .style("stroke-width", "2")
+                .attr("x1", posMarkerXPlaning+markerWidth/2)
+                .attr("y1", posMarkerYPlaning)
+                .attr("x2", posMarkerXPlaningNext-markerWidth/2)
+                .attr("y2", posMarkerYPlaning);
+                }
+                if (obj["doing"][j]["date"].getFullYear() >= yearStart && obj["doing"][j+1]["date"].getFullYear() <= yearFinish) {
+                //линия по выполнению
+                svg.append("line")
+                .style("stroke", "gray")
+                .style("stroke-width", "2")
+                .attr("x1", posMarkerXDoing+markerWidth/2)
+                .attr("y1", posMarkerYDoing)
+                .attr("x2", posMarkerXDoingNext-markerWidth/2)
+                .attr("y2", posMarkerYDoing);
+                }
+    
+            }
             //рисуем пунктирную линию, соединяющую маркеры
             if(dateOfPlaning.getFullYear() >= yearStart && dateOfPlaning.getFullYear() <= yearFinish&&dateOfDoing.getFullYear() >= yearStart && dateOfDoing.getFullYear() <= yearFinish){
             
