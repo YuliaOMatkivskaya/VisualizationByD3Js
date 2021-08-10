@@ -3,7 +3,7 @@ let baseJson = `[{
         "title":"Котельная",
         "planing":[
             {"name":"Монтаж0","date":"2016-01-28T12:00:00.000Z"},
-            {"name":"Монтаж1","date":"2017-05-23T12:00:00.000Z"}
+            {"name":"Монтаж1","date":"2017-06-23T12:00:00.000Z"}
             ],
             "doing":[
             {"name":"Монтаж0","date":"2016-01-25T12:00:00.000Z"},
@@ -20,7 +20,29 @@ let baseJson = `[{
             {"name":"Монтаж0","date":"2017-12-05T12:00:00.000Z"},
             {"name":"Монтаж1","date":"2021-09-04T12:00:00.000Z"}
             ]
-        }
+        },
+        {
+            "title":"Котельная",
+            "planing":[
+                {"name":"Монтаж0","date":"2016-01-28T12:00:00.000Z"},
+                {"name":"Монтаж1","date":"2017-05-23T12:00:00.000Z"}
+                ],
+                "doing":[
+                {"name":"Монтаж0","date":"2016-01-25T12:00:00.000Z"},
+                {"name":"Монтаж1","date":"2017-10-02T12:00:00.000Z"}
+                ]
+            }, 
+            {
+            "title":"Трансформаторная будка",
+            "planing":[
+                {"name":"Монтаж0","date":"2017-11-13T12:00:00.000Z"},
+                {"name":"Монтаж1","date":"2022-01-10T12:00:00.000Z"}
+                ],
+                "doing":[
+                {"name":"Монтаж0","date":"2017-12-05T12:00:00.000Z"},
+                {"name":"Монтаж1","date":"2021-09-04T12:00:00.000Z"}
+                ]
+            }
         ]`;
 
 let baseOfData = JSON.parse(baseJson, function (key, value) {
@@ -298,14 +320,14 @@ for (let obj of baseOfData) {
                 textMarkersDate = `${addZero(dateOfDoing.getDate())}`+`.`+`${addZero(dateOfDoing.getMonth()+1)}`+`.`+`${dateOfDoing.getFullYear()}`;
                 svg.append("text")
                     .attr("x",posMarkerXDoing)
-                    .attr("y",230)
+                    .attr("y",230 + 10*Math.sin(180*j))
                     .style("font-size", "8px")
                     .style("fill", "black")
                     .text(textMarkersDate);
 
                 svg.append("text")
                     .attr("x",posMarkerXDoing)
-                    .attr("y",180)
+                    .attr("y",180 + 10*Math.sin(180*j))
                     .style("font-size", "10px")
                     .style("fill", "black")
                     .style("font-weight", 700)
@@ -328,14 +350,14 @@ for (let obj of baseOfData) {
                 textMarkersDate = `${addZero(dateOfPlaning.getDate())}`+`.`+`${addZero(dateOfPlaning.getMonth()+1)}`+`.`+`${dateOfPlaning.getFullYear()}`;
                 svg.append("text")
                     .attr("x",posMarkerXPlaning)
-                    .attr("y",120)
+                    .attr("y",120 + 10*Math.sin(180*j))
                     .style("font-size", "8px")
                     .style("fill", "black")
                     .text(textMarkersDate);
 
                 svg.append("text")
                     .attr("x",posMarkerXPlaning)
-                    .attr("y",70)
+                    .attr("y",70 + 10*Math.sin(180*j))
                     .style("font-size", "10px")
                     .style("fill", "black")
                     .style("font-weight", 700)
@@ -371,3 +393,8 @@ for (let obj of baseOfData) {
 function addZero(n){
     return (parseInt(n, 10) < 10 ? '0' : '') + n;
 }
+/*for(let i=0;i<5;i++){
+    let b = 180 + 5*Math.sin(90*i);
+alert(b);
+}
+*/
