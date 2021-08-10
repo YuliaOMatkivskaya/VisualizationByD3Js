@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,28 +10,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     <div class="flex-container">
         <div class="first">
-            
+
             <div id="container"></div>
         </div>
-        <div class="second"> 
-    <h4 id="Year">Установить фильтрацию по годам</h4>
-    <input id="itemYearStart" type="text">
-    <input id="itemYearFinish" type="text">
-    <button id="sendYear">Применить фильтр по годам</button>
-    <button id="removeYear">Сбросить фильтр по годам</button>
-    
-    <h4 id="Text">Установить фильтрацию по названию объекта</h4>
-    <input id="SearchText" type="text">
-    <button id="sendText">Применить фильтр по названию</button>
-    <button id="removeText">Сбросить фильтр по названию</button>
-    <h4>Сохранить документ</h4>
-    <button id="savePDF">Сохранить в PDF</button>
-</div>
-      </div>
+        <div class="second">
+            <h4 id="Year">Установить фильтрацию по годам</h4>
+            <input id="itemYearStart" type="text">
+            <input id="itemYearFinish" type="text">
+            <button id="sendYear">Применить фильтр по годам</button>
+            <button id="removeYear">Сбросить фильтр по годам</button>
 
-<script  type="text/javascript" src="script.js"></script>
+            <h4 id="Text">Установить фильтрацию по названию объекта</h4>
+            <input id="SearchText" type="text">
+            <button id="sendText">Применить фильтр по названию</button>
+            <button id="removeText">Сбросить фильтр по названию</button>
+            <h4>Сохранить документ</h4>
+            <button id="savePDF">Сохранить в PDF</button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="script.js"></script>
 </body>
+
 </html>
