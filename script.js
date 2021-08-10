@@ -148,10 +148,13 @@ let itemYearStart = document.querySelector("#itemYearStart");
 let itemYearFinish = document.querySelector("#itemYearFinish");
 let sendYear = document.querySelector("#sendYear");
 let removeYear = document.querySelector("#removeYear");
+let yearsFilter = document.querySelector("#yearsFilter");
+let wordFilter = document.querySelector("#wordFilter");
+
 
 function YearsAreCorrect() {
     if (localStorage.getItem("yearStart") == null || localStorage.getItem("yearFinish") < localStorage.getItem("yearStart") || 
-    localStorage.getItem("yearStart") < 2016) {
+    localStorage.getItem("yearStart") < 2016||localStorage.getItem("yearFinish") > 2024) {
         itemYearStart.value = 2016;
         localStorage.setItem("yearStart", itemYearStart.value);
     } else {
@@ -165,6 +168,7 @@ function YearsAreCorrect() {
     } else {
         itemYearFinish.value = localStorage.getItem("yearFinish");
     }
+
 }
 
 function addItemsYears() {
@@ -551,3 +555,12 @@ for (let obj of baseOfData) {
 function addZero(n) {
     return (parseInt(n, 10) < 10 ? '0' : '') + n;
 }
+
+//вывод пояснения к фильтрации
+let textYearsInterval;
+let textWordFilter;
+(localStorage.getItem("yearStart")&&localStorage.getItem("yearFinish"))? textYearsInterval = `Период по умолчанию 2016-2024, установлен период:`+`${localStorage.getItem("yearStart")}`+`-`+ `${localStorage.getItem("yearFinish")}` : textYearsInterval = `2016-2024`;
+
+(localStorage.getItem("searchText"))? textWordFilter = `Фильтрация по совпадению с: `+ `"` +`${localStorage.getItem("searchText")}`+`"`:textWordFilter = `Фильтр не установлен`;
+wordFilter.innerHTML = textWordFilter;
+yearsFilter.innerHTML = textYearsInterval;

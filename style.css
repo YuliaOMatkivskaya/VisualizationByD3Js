@@ -30,3 +30,7 @@ svg {
     
   }
 
+#wordFilter, #yearsFilter{
+  color:brown;
+}
+

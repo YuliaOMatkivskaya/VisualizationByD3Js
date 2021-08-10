@@ -8,23 +8,24 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
-    <title>Document</title>
+    <title>Визуализация данных</title>
 </head>
 
 <body>
     <div class="flex-container">
         <div class="first">
-
             <div id="container"></div>
         </div>
         <div class="second">
             <h4 id="Year">Установить фильтрацию по годам</h4>
+            <div id="yearsFilter"></div>
             <input id="itemYearStart" type="text" size="10">
             <input id="itemYearFinish" type="text" size="10">
             <button id="sendYear">Применить фильтр по годам</button>
             <button id="removeYear">Сбросить фильтр по годам</button>
 
             <h4 id="Text">Установить фильтрацию по названию объекта</h4>
+            <div id="wordFilter"></div>
             <input id="SearchText" type="text" size="10">
             <button id="sendText">Применить фильтр по названию</button>
             <button id="removeText">Сбросить фильтр по названию</button>
